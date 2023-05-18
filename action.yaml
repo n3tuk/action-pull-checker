@@ -6,10 +6,7 @@ description: |-
 
 runs:
   using: docker
-  # Use the same git tag/branch/commit reference given for the action as for the
-  # container image to be fetched, although this will only work for anything
-  # that has been tagged and released only
-  image: ghcr.io/n3tuk/pull-requester:${{ github.action_ref }}
+  image: ghcr.io/n3tuk/pull-requester
   args:
     - run
 
