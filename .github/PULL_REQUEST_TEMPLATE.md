@@ -7,7 +7,7 @@ Please confirm the following checks:
 - [ ] I have added tests that prove my changes are effective and work correctly.
 - [ ] I have made corresponding changes to the documentation as needed.
 - [ ] I have checked my code and corrected any misspellings.
-- [ ] Each commit in this pull request has meaningful subject & body for context.
+- [ ] Each commit in this pull request has a meaningful subject & body for context.
 - [ ] I have squashed all "fix(up)" commits to provide a clean code history.
 - [ ] My pull request has an appropriate title and description for context.
 - [ ] I have linked this pull request to other issues or pull requests as needed.
