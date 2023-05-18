@@ -1,0 +1,40 @@
+---
+version: 2
+
+updates:
+
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+      day: friday
+      time: "18:00"
+      timezone: "Europe/London"
+    commit-message:
+      prefix: go
+      include: scope
+    reviewers:
+      - n3tuk/admin
+    labels:
+      - type/dependencies
+      - update/go
+      - release/chore
+      - priority/normal
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: thursday
+      time: "18:00"
+      timezone: "Europe/London"
+    commit-message:
+      prefix: actions
+      include: scope
+    reviewers:
+      - n3tuk/admin
+    labels:
+      - type/dependencies
+      - update/github-workflows
+      - release/chore
+      - priority/normal

@@ -1,0 +1,177 @@
+---
+version: 3
+interval: 1000ms
+output: group
+
+vars:
+  bin_name: pull-requester
+
+tasks:
+  default:
+    cmds:
+      - task: clean
+      - task: build
+      - task: codeql
+
+  dirs:
+    desc: Creaete the required directories for building/testing
+    summary: |-
+      Create any required directories needed as part of building and/or testing
+      the application.
+    run: once
+    internal: true
+    cmds:
+      - cmd: mkdir -p bin
+      - cmd: mkdir -p coverage/unit
+      - cmd: mkdir -p coverage/integration
+    status:
+      - test -d bin
+      - test -d coverage/unit
+      - test -d coverage/integration
+
+  modules:
+    desc: Prepare the Go modules
+    aliases:
+      - m
+    sources:
+      - go.mod
+      - go.sum
+    cmds:
+      - go mod download
+
+  healthcheck:
+    desc: Check that the GoReleaser environtment is valid
+    run: once
+    internal: true
+    sources:
+      - .goreleaser.yaml
+    cmds:
+      - cmd: goreleaser healthcheck
+      - cmd: goreleaser check
+
+  build:
+    desc: Locally build the application binary
+    summary: |-
+      Locally build the application binary for the testing and local
+      development of the utility with a temporary version number based on the
+      local commit and file contents.
+    deps:
+      - task: test
+      - task: lint
+    aliases:
+      - b
+    sources:
+      - "./*.go"
+      - "./**/*.go"
+      - .goreleaser.yaml
+    cmds:
+      - cmd: |-
+          goreleaser build --clean --timeout 2m \
+            --snapshot --single-target --output bin/{{ .bin_name }}
+
+  test:
+    desc: Run the unit tests for the application
+    deps:
+      # Make sure that all the directories needed are created first and that all
+      # the files are properly formatted before testing
+      - task: dirs
+    aliases:
+      - t
+    sources:
+      - "./*.go"
+      - "./**/*.go"
+    cmds:
+      # If this taskfile is being run inside of tmux, tell tmux to send the
+      # Enter key to the same pane as it is running in so that it exits
+      # scrolling mode and starts refreshing the screen as new tests are run
+      - cmd: |-
+          test -n "$TMUX_PANE" && tmux send-keys -t $TMUX_PANE Enter
+        silent: true
+      - cmd: |-
+          go test \
+            -v -cover -race ./... \
+            -args -test.gocoverdir='{{ .ROOT_DIR }}/coverage/unit'
+      - cmd: |-
+          go tool covdata percent \
+            -i coverage/unit
+      - cmd: |-
+          go tool covdata textfmt \
+            -i coverage/unit \
+            -o coverage.out
+        silent: true
+      - cmd: |-
+          go tool cover \
+            -html coverage.out \
+            -o coverage.html
+        silent: true
+
+  fmt:
+    desc: Properly format all the .go files
+    summary: |-
+      Properly fomrmat all of the .go files using go (this is a write-based
+      action which will make changes to all .go files, if required).
+    aliases:
+      - f
+    sources:
+      - "./*.go"
+      - "./**/*.go"
+    cmds:
+      - cmd: go fmt ./...
+
+  lint:
+    desc: Check linting via golangci-lint
+    aliases:
+      - l
+    deps:
+      - task: healthcheck
+    sources:
+      - "./*.go"
+      - "./**/*.go"
+      - .golangci.yaml
+    cmds:
+      - cmd: golangci-lint run
+
+  codeql-database:
+    desc: Build the CodeQL database for analysis
+    run: once
+    internal: true
+    env:
+      CODEQL_EXTRACTOR_GO_BUILD_TRACING: on
+    cmds:
+      - cmd: |-
+          codeql database create .codeql --language=go \
+            --command 'goreleaser build --clean --snapshot --single-target'
+    status:
+      - test -d .codeql
+
+  codeql:
+    desc: Run CodeQL static code analysis
+    summary: |-
+      Run the CodeQL application against the codebase looking for configuration
+      issues and vunlerabilitys in both the code and any dependencies upstream.
+    aliases:
+      - s
+    deps:
+      - task: build
+      - task: codeql-database
+    sources:
+      - "./*.go"
+      - "./**/*.go"
+    cmds:
+      - cmd: |-
+          codeql database analyze --quiet --threads=-2 \
+            --format=sarif-latest --output codeql.sarif \
+            --sarif-add-file-contents --no-print-metrics-summary \
+            -- .codeql codeql/go-queries
+
+  clean:
+    desc: Clean up temporary files and locations
+    aliases:
+      - c
+    run: once
+    cmds:
+      - cmd: rm -f bin/{{ .bin_name }}
+      - cmd: rm -rf dist
+      - cmd: rm -rf coverage/*/* coverage.out
+      - cmd: rm -rf .codeql codeql.sarif
+      - cmd: rm -rf .task
