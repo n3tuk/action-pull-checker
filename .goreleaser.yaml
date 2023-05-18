@@ -37,6 +37,7 @@ archives:
       {{- tolower .Os }}-
       {{- tolower .Arch }}
     format: tar.gz
+    rlcp: true
     files:
       - LICENSE
 checksum:
