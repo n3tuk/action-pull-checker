@@ -7,7 +7,7 @@ LABEL maintainer="Jonathan Wright <jon@than.io>" \
   org.opencontainers.image.authors="Jonathan Wright <jon@than.io>" \
   org.opencontainers.image.vendor="n3t.uk"
 
-COPY pull-requester /go/bin/pull
+COPY pull-requester /go/bin/pull-requester
 
 ENTRYPOINT ["/go/bin/pull-requester"]
 CMD ["run"]
