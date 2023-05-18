@@ -1,0 +1,108 @@
+---
+project_name: pull-requester
+release:
+  github:
+    owner: n3tuk
+    name: action-pull-requester
+  name_template: "{{ .Tag }}"
+changelog:
+  skip: true
+snapshot:
+  name_template: "{{ incpatch .Version }}~g{{ .ShortCommit }}{{ if .IsGitDirty }}-d{{ .Now.Format \"02-t150405\" }}{{ end }}"
+builds:
+  - id: pull-requester
+    main: main.go
+    binary: pull-requester
+    env:
+      - CGO_ENABLED=0
+    ldflags: >-
+      -s -w
+      -X 'main.branch={{ .Branch }}'
+      -X 'main.commit={{ .FullCommit }}'
+      -X 'main.version={{ .Version }}'
+      -X 'main.date={{ .Date }}'
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    targets:
+      - linux_amd64
+      - linux_arm64
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}-
+      {{- .Version }}-
+      {{- tolower .Os }}-
+      {{- tolower .Arch }}
+    format: tar.gz
+    files:
+      - LICENSE
+checksum:
+  name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
+
+# Create images for both amd64 and arm64 to give it the widest possible support
+dockers:
+  - id: pull-requester-amd64
+    goarch: amd64
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+    dockerfile: Dockerfile
+    use: docker
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+  - id: pull-requester-arm64
+    goarch: arm64
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+    dockerfile: Dockerfile
+    use: docker
+    build_flag_templates:
+      - --platform=linux/arm64
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ .Date }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+
+# Build a set of manifests based on all the ways the GitHub Action could be
+# called, including as the main branch, both short and long commit IDs, and each of
+# Major, Major/Minor, and Major/Minor/Patch versions being tagged
+docker_manifests:
+  - name_template: ghcr.io/n3tuk/pull-requester:latest
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:main
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:{{ .FullCommit }}
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:{{ .ShortCommit }}
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:v{{ .Major }}.{{ .Minor }}.{{ .Patch}}
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:v{{ .Major }}.{{ .Minor }}
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
+  - name_template: ghcr.io/n3tuk/pull-requester:v{{ .Major }}
+    use: docker
+    image_templates:
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-amd64
+      - ghcr.io/n3tuk/pull-requester:{{ .Version }}-arm64
