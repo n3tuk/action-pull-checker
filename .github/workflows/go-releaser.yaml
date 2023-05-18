@@ -74,6 +74,6 @@ jobs:
         run: |
           TAG=${GITHUB_REF/refs\/tags\//}
           VERSION=${TAG#v}
-          MAGOR_MINOR=${VERSION%.*}
+          MAJOR_MINOR=${VERSION%.*}
           git tag v${MAJOR_MINOR} ${TAG} -f
           git push origin refs/tags/v${MAJOR_MINOR} -f
