@@ -6,7 +6,7 @@ description: |-
 
 runs:
   using: docker
-  image: ghcr.io/n3tuk/pull-requester
+  image: docker://ghcr.io/n3tuk/pull-requester
   args:
     - run
 
