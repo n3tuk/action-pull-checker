@@ -72,6 +72,7 @@ jobs:
       - name: Commit the documentation tag update
         run: |-
           if git diff --exit-code --quiet README.md
+          then
             echo "No changes to README.md need to be committed due to a release."
             exit 0
           fi

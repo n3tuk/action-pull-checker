@@ -34,6 +34,7 @@ jobs:
       - name: Commit the published tag update
         run: |-
           if git diff --exit-code --quiet action.yaml
+          then
             echo "No changes to action.yaml need to be committed for the release."
             exit 0
           fi
