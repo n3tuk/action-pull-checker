@@ -7,9 +7,11 @@ coverage/*
 .codeql
 codeql.sarif
 
-# Ignore the build output
+# Ignore the build output and any pre-built downloads
 bin/*
 dist/*
+scripts/pull-requester*
+scripts/LICENSE
 
 # Ignore taskfile processing directory
 .task

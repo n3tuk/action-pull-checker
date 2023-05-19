@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
   issues: write
   pull-requests: write
 
@@ -35,4 +36,4 @@ jobs:
       - name: Pull Requester
         # Target main here as it's easier than trying to deal with future
         # versions that this pull request will become
-        uses: n3tuk/action-pull-requester@main
+        uses: n3tuk/action-pull-requester@v1

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+TAG=${1:-latest}
+VERSION=${TAG#v}
+
+curl --silent --location \
+  --header "Authorization: Bearer $GITHUB_TOKEN" \
+  --output $GITHUB_ACTION_PATH/scripts/pull-requester.tar.gz \
+  https://github.com/n3tuk/action-pull-requester/releases/download/v${VERSION}/pull-requester-${VERSION}-linux-amd64.tar.gz
+
+tar xzf \
+  $GITHUB_ACTION_PATH/scripts/pull-requester.tar.gz \
+  -C $GITHUB_ACTION_PATH/scripts/
+
+$GITHUB_ACTION_PATH/scripts/pull-requester run
