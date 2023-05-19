@@ -5,10 +5,10 @@ description: |-
   for the n3tuk Organisation.
 
 runs:
-  using: docker
-  image: docker://ghcr.io/n3tuk/pull-requester
-  args:
-    - run
+  using: composite
+  steps:
+    - run: ${{ github.action_path }}/scripts/run v1.0.0
+      shell: bash
 
 branding:
   icon: user-check
