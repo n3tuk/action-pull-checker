@@ -7,7 +7,13 @@ description: |-
 runs:
   using: composite
   steps:
-    - run: ${{ github.action_path }}/scripts/run v1.0.0
+    - run: |-
+        ${{ github.action_path }}/scripts/fetch \
+          "${{ github.action_repository }}" \
+          "${{ github.action_ref }}"
+      shell: bash
+    - run: |-
+        ${{ github.action_path }}/bin/pull-requester run
       shell: bash
 
 branding:
