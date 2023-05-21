@@ -11,7 +11,6 @@ codeql.sarif
 bin/*
 dist/*
 scripts/pull-requester*
-scripts/LICENSE
 
 # Ignore taskfile processing directory
 .task
