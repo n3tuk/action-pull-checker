@@ -53,36 +53,6 @@ jobs:
           version: latest
           args: release --clean
 
-  update-documentation:
-    name: Update the Documentation
-    runs-on: ubuntu-latest
-    needs:
-      - goreleaser
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
-
-      - name: Fetch the tags
-        run: git fetch --force --tags
-
-      - name: Update the documentation tag reference
-        run: |-
-          sed -i 's|\(uses: n3tuk/pull-requester\)@\([v[0-9\.]\+\)$|\1@${{ github.ref_name }}|' README.md
-
-      - name: Commit the documentation tag update
-        run: |-
-          if git diff --exit-code --quiet README.md
-            echo "No changes to README.md need to be committed due to a release."
-            exit 0
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add README.md
-          git commit --no-verify \
-             -m "Update the GitHub Action tag to ${{ github.ref_name }} in README" \
-             -m "Update the version tag for the GitHub Action in the README to ${{ steps.drafter.outputs.id }}\nto account for the latest release."
-          git push
-
   update-tags:
     name: Update Major/Minor Tags
     runs-on: ubuntu-latest
