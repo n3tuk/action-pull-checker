@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Pull Requester
-        uses: n3tuk/action-pull-requester@v1.0.0
+        uses: n3tuk/action-pull-requester@v1
 ```
 
 > **Note**:

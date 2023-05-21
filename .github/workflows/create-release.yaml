@@ -26,21 +26,3 @@ jobs:
         with:
           config-name: release-drafter.yaml
           disable-autolabeler: true
-
-      - name: Prepare the published tag reference
-        run: |-
-          sed -i 's|\(scripts/run\) \(v[0-9\.]\+\)$|\1 ${{ steps.drafter.output.id }}|' action.yaml
-
-      - name: Commit the published tag update
-        run: |-
-          if git diff --exit-code --quiet action.yaml
-            echo "No changes to action.yaml need to be committed for the release."
-            exit 0
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add action.yaml
-          git commit --no-verify \
-             -m "Update tag in GitHub Action to prepare for release" \
-             -m "Update the published tag to ${{ steps.drafter.output.id }} to prepare the GitHub Action for release."
-          git push
