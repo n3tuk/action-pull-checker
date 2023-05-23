@@ -11,6 +11,7 @@ runs:
     - name: Fetch the pull-requester artifact
       shell: bash
       env:
+        GITHUB_TOKEN: ${{ secrets.github_token || github.token }}
         # Both github.action_repository and .action_ref are not available inside
         # the run: statement, but they are available under env: so set them here
         # so they can be accessed as normal environment variable under the
@@ -25,6 +26,8 @@ runs:
 
     - name: Run pull-requester against the pull request
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token || github.token }}
       run: |-
         ${{ github.action_path }}/bin/pull-requester run
 
