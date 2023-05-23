@@ -88,21 +88,16 @@ tasks:
           test -n "$TMUX_PANE" && tmux send-keys -t $TMUX_PANE Enter
         silent: true
       - cmd: |-
-          go test \
-            -v -cover -race ./... \
-            -args -test.gocoverdir='{{ .ROOT_DIR }}/coverage/unit'
-      - cmd: |-
-          go tool covdata percent \
-            -i coverage/unit
-      - cmd: |-
-          go tool covdata textfmt \
-            -i coverage/unit \
-            -o coverage.out
-        silent: true
+          go test -v ./... \
+            -covermode=count \
+            -coverprofile=coverage.out
       - cmd: |-
           go tool cover \
-            -html coverage.out \
-            -o coverage.html
+            -func=coverage.out
+      - cmd: |-
+          go tool cover \
+            -html=coverage.out \
+            -o=coverage.html
         silent: true
 
   fmt:

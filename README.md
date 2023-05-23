@@ -1,5 +1,10 @@
 # n3tuk Pull Request Checker
 
+[![GitHub go-integrations Workflow Status](https://img.shields.io/github/actions/workflow/status/n3tuk/action-pull-requester/go-integrations.yaml?label=go-integrations&style=flat-square)](https://github.com/n3tuk/action-pull-requester/actions/workflows/go-integrations.yaml)
+[![GitHub codeql Workflow Status](https://img.shields.io/github/actions/workflow/status/n3tuk/action-pull-requester/codeql.yaml?label=codeql&style=flat-square)](https://github.com/n3tuk/action-pull-requester/actions/workflows/codeql.yaml)
+[![GitHub go-releaser Workflow Status](https://img.shields.io/github/actions/workflow/status/n3tuk/action-pull-requester/go-releaser.yaml?label=go-releaser&style=flat-square)](https://github.com/n3tuk/action-pull-requester/actions/workflows/go-releaser.yaml)
+[![Codecov Status](https://codecov.io/gh/n3tuk/action-pull-requester/branch/main/graph/badge.svg?token=ZTYAZGRQG5)](https://codecov.io/gh/n3tuk/action-pull-requester)
+
 A GitHub Action for running standard checks and automations on pull requests for
 the `n3tuk` Organisation.
 
@@ -56,3 +61,9 @@ jobs:
 > Do **not** use the `main` branch (or any other branch) as a reference for the
 > GitHub Action, as the binaries for the GitHub Action builds and releases on
 > tagging, and the Action downloads those on running.
+
+## Inputs
+
+| Name | Description | Required | Default |
+| :--- | :---------- | :------: | :------ |
+| `title-minimum` | The minimum number of characters that a title should contain | `false` | `25` |
