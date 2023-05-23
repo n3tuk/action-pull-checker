@@ -17,8 +17,7 @@ ARCHIVE=${GITHUB_ACTION_PATH}/scripts/pull-requester.tar.gz
 BIN_DIR=${GITHUB_ACTION_PATH}/bin
 
 echo "::debug::Looking for a release for ${REPO}@${REFERENCE}"
-if [[ "${REFERENCE}" == "unknown" ]]
-then
+if [[ "${REFERENCE}" == "unknown" ]]; then
   echo "::error::Unknown or missing reference provided for the GitHub Action ${REPO}"
   exit 1
 fi
@@ -30,7 +29,7 @@ TAGS_FOR_REFERENCE=$(
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "/repos/${REPO}/git/refs/tags" \
-  | jq -r '
+    | jq -r '
       # Convert tags into v0.0.0 format only
         [.[] | .ref |= sub("^refs/tags/"; "")]
       # Convert tag => sha
@@ -53,8 +52,7 @@ TAGS_FOR_REFERENCE=$(
       | .[]'
 )
 
-if [[ -z "${TAGS_FOR_REFERENCE}" ]]
-then
+if [[ -z "${TAGS_FOR_REFERENCE}" ]]; then
   echo "::error::${REPO}@${REFERENCE} does not point to a valid tag for this GitHub Action"
   exit 1
 fi
@@ -66,7 +64,7 @@ RELEASE=$(
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "/repos/${REPO}/releases" \
-  | jq -r '
+    | jq -r '
         .[] | select(.published_at != null) | select(.tag_name | IN("'"${TAGS_FOR_REFERENCE//[$'\n ']/\", \"}"'")) | .tag_name'
 )
 
@@ -74,13 +72,13 @@ echo "::debug::Release is ${RELEASE}"
 
 echo "::debug::Requesting pull-requester-${RELEASE#v}-linux-${ARCH}.tar.gz"
 if ! curl --silent --location --header "Authorization: Bearer ${GITHUB_TOKEN}" --output "${ARCHIVE}" \
-    "https://github.com/${REPO}/releases/download/v${RELEASE#v}/pull-requester-${RELEASE#v}-linux-${ARCH}.tar.gz"
-then
+  "https://github.com/${REPO}/releases/download/v${RELEASE#v}/pull-requester-${RELEASE#v}-linux-${ARCH}.tar.gz"; then
   echo "::error::Unable to download the package pull-requester-${RELEASE#v}-linux-${ARCH}.tar.gz"
   exit 1
 fi
 
 echo "::debug::Successfully downloaded pull-requester-${RELEASE#v}-linux-${ARCH}.tar.gz"
 
+mkdir -p "${BIN_DIR}"
 tar xzf "${ARCHIVE}" -C "${BIN_DIR}"
 rm -f "${ARCHIVE}"
