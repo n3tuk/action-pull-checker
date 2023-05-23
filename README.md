@@ -53,6 +53,6 @@ jobs:
 ```
 
 > **Note**:
-> Do **not** use the `main` branch as a tag for the GitHub Action, as the
-> container for the GitHub Action builds and releases on tagging, and the
-> preparation for that is on merges to the `main` branch.
+> Do **not** use the `main` branch (or any other branch) as a reference for the
+> GitHub Action, as the binaries for the GitHub Action builds and releases on
+> tagging, and the Action downloads those on running.
