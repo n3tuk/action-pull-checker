@@ -61,9 +61,21 @@ tasks:
     aliases:
       - b
     sources:
-      - "./*.go"
-      - "./**/*.go"
-      - .goreleaser.yaml
+      - "go.mod"
+      - "go.sum"
+      - "main.go"
+      - "**/*.go"
+      - ".goreleaser.yaml"
+    env:
+      # Exclude the floating tags for major and major/minor versions beyond the
+      # standard semver versioning, otherwise they will appear first in the list
+      GORELEASER_CURRENT_TAG:
+        sh: |-
+          git describe --tags --abbrev=0 \
+            --exclude 'v[0-9]'                 --exclude 'v[0-9].[0-9]' \
+            --exclude 'v[0-9].[0-9][0-9]'      --exclude 'v[0-9].[0-9][0-9][0-9]' \
+            --exclude 'v[0-9][0-9]'            --exclude 'v[0-9][0-9].[0-9]' \
+            --exclude 'v[0-9][0-9].[0-9][0-9]' --exclude 'v[0-9][0-9].[0-9][0-9][0-9]'
     cmds:
       - cmd: |-
           goreleaser build --clean --timeout 2m \
@@ -78,8 +90,8 @@ tasks:
     aliases:
       - t
     sources:
-      - "./*.go"
-      - "./**/*.go"
+      - "main.go"
+      - "**/*.go"
     cmds:
       # If this taskfile is being run inside of tmux, tell tmux to send the
       # Enter key to the same pane as it is running in so that it exits
@@ -108,8 +120,8 @@ tasks:
     aliases:
       - f
     sources:
-      - "./*.go"
-      - "./**/*.go"
+      - "main.go"
+      - "**/*.go"
     cmds:
       - cmd: go fmt ./...
 
@@ -120,9 +132,9 @@ tasks:
     deps:
       - task: healthcheck
     sources:
-      - "./*.go"
-      - "./**/*.go"
-      - .golangci.yaml
+      - "main.go"
+      - "**/*.go"
+      - ".golangci.yaml"
     cmds:
       - cmd: golangci-lint run
 
@@ -150,8 +162,10 @@ tasks:
       - task: build
       - task: codeql-database
     sources:
-      - "./*.go"
-      - "./**/*.go"
+      - "go.mod"
+      - "go.sum"
+      - "main.go"
+      - "**/*.go"
     cmds:
       - cmd: |-
           codeql database analyze --quiet --threads=-2 \
