@@ -4,6 +4,12 @@ description: |-
   A GitHub Action for running standard checks and automations on pull requests
   for the n3tuk Organisation.
 
+inputs:
+  title-minimum:
+    description: The minimum number of characters that a title should contain
+    required: false
+    default: 25
+
 runs:
   using: composite
   steps:
@@ -29,7 +35,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       run: |-
-        ${{ github.action_path }}/bin/pull-requester run
+        ${{ github.action_path }}/bin/pull-requester run \
+          --title-minimum ${{ inputs.title-minimum }}
 
 branding:
   icon: user-check

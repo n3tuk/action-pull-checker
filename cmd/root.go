@@ -54,6 +54,9 @@ func setupLogging() error {
 		executable = "pull-requester"
 	}
 
+	// Look for RUNNER_DEBUG which is set by GitHub Workflows when debugging if
+	// requested, and although this does not output true debugging messages for
+	// GitHub Actions, this will output debugging messages at least
 	if envRunnerDebug := os.Getenv("RUNNER_DEBUG"); envRunnerDebug == "1" {
 		logger.SetLevel(logrus.DebugLevel)
 	} else if level, err := logrus.ParseLevel(logLevel); err == nil {

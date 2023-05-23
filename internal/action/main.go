@@ -3,52 +3,58 @@ package action
 import (
 	"fmt"
 
+	"github.com/n3tuk/action-pull-requester/internal/github"
+
 	"github.com/sirupsen/logrus"
 )
 
-func RunChecks(log *logrus.Logger) error {
-	log.
-		Info("starting checks and automations")
+type Options struct {
+	TitleMinimum int
+}
 
-	if err := CheckTitle(log); err != nil {
+func RunChecks(logger *logrus.Logger, pullRequest *github.PullRequest, options *Options) error {
+	logger.
+		WithFields(logrus.Fields{
+			"owner":      pullRequest.Owner,
+			"repository": pullRequest.Repository,
+			"number":     pullRequest.Number,
+		}).
+		Debug("running checks")
+
+	if err := CheckTitle(logger, pullRequest, options.TitleMinimum); err != nil {
 		return fmt.Errorf("check on title failed: %w", err)
 	}
 
-	if err := CheckDescription(log); err != nil {
+	if err := CheckDescription(logger, pullRequest); err != nil {
 		return fmt.Errorf("check on description failed: %w", err)
 	}
 
-	if err := CheckLabels(log); err != nil {
+	if err := CheckLabels(logger, pullRequest); err != nil {
 		return fmt.Errorf("check on labels failed: %w", err)
 	}
 
 	return nil
 }
 
-func RunAutomations(log *logrus.Logger) error {
-	log.
-		Info("starting checks")
+func RunAutomations(logger *logrus.Logger, pullRequest *github.PullRequest) error {
+	logger.
+		WithFields(logrus.Fields{
+			"owner":      pullRequest.Owner,
+			"repository": pullRequest.Repository,
+			"number":     pullRequest.Number,
+		}).
+		Debug("running automations")
 
-	if err := CheckAssignee(log); err != nil {
+	if err := CheckAssignee(logger, pullRequest); err != nil {
 		return fmt.Errorf("check on assignee failed: %w", err)
 	}
 
 	return nil
 }
 
-func CheckTitle(log *logrus.Logger) error {
+func CheckDescription(log *logrus.Logger, pullRequest *github.PullRequest) error {
 	log.
-		Info("checking the title")
-
-	log.
-		Error("title check not yet supported")
-
-	return nil
-}
-
-func CheckDescription(log *logrus.Logger) error {
-	log.
-		Info("checking the description")
+		Debug("checking the description")
 
 	log.
 		Error("description check not yet supported")
@@ -56,9 +62,9 @@ func CheckDescription(log *logrus.Logger) error {
 	return nil
 }
 
-func CheckLabels(log *logrus.Logger) error {
+func CheckLabels(log *logrus.Logger, pullRequest *github.PullRequest) error {
 	log.
-		Info("checking the labels")
+		Debug("checking the labels")
 
 	log.
 		Error("label check not yet supported")
@@ -66,9 +72,9 @@ func CheckLabels(log *logrus.Logger) error {
 	return nil
 }
 
-func CheckAssignee(log *logrus.Logger) error {
+func CheckAssignee(log *logrus.Logger, pullRequest *github.PullRequest) error {
 	log.
-		Info("checking the assignee")
+		Debug("checking the assignee")
 
 	log.
 		Error("assignee automation not yet supported")
