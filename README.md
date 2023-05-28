@@ -64,7 +64,8 @@ jobs:
 
 ## Inputs
 
-| Name             | Description                                                             | Required | Default |
-| :--------------- | :---------------------------------------------------------------------- | :------: | :------ |
-| `title-minimum`  | The minimum number of characters that a title should contain            | `false`  | `25`    |
-| `label-prefixes` | A comma-separated list of label prefixes to check for on a pull request | `false`  | `''`    |
+| Name                 | Description                                                             | Required | Type     | Default |
+| :------------------- | :---------------------------------------------------------------------- | :------: | :------- | :------ |
+| `title-minimum`      | The minimum number of characters that a title should contain            | `false`  | `int`    | `25`    |
+| `label-prefixes`     | A comma-separated list of label prefixes to check for on a pull request | `false`  | `string` | `''`    |
+| `label-prefixes-any` | Set that any label prefix can match to pass, rather than all            | `false`  | `bool`   | `false' |

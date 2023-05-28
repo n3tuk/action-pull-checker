@@ -44,17 +44,31 @@ var (
 	// Define the expected tests for TestCheckLabels()
 	CheckLabelsTests = []*CheckLabelsTest{
 		{
-			Name:             "all-types-match",
+			Name:             "all-types-match-and",
 			Labels:           []*github.Label{labelTestOne, labelTestTwo, labelReleaseOne, labelReleaseTwo, labelPriorityOne, labelPriorityTwo},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
 			AnyPrefix:        false,
 			Pass:             true,
 		},
 		{
-			Name:             "simple-types-match",
+			Name:             "all-types-match-all",
+			Labels:           []*github.Label{labelTestOne, labelTestTwo, labelReleaseOne, labelReleaseTwo, labelPriorityOne, labelPriorityTwo},
+			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
+			AnyPrefix:        true,
+			Pass:             true,
+		},
+		{
+			Name:             "simple-types-match-and",
 			Labels:           []*github.Label{labelTestOne},
 			RequiredPrefixes: []string{prefixTest},
 			AnyPrefix:        false,
+			Pass:             true,
+		},
+		{
+			Name:             "simple-types-match-any",
+			Labels:           []*github.Label{labelTestOne},
+			RequiredPrefixes: []string{prefixTest},
+			AnyPrefix:        true,
 			Pass:             true,
 		},
 		{
@@ -65,10 +79,17 @@ var (
 			Pass:             true,
 		},
 		{
-			Name:             "empty-labels-case",
+			Name:             "empty-labels-case-and",
 			Labels:           []*github.Label{},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
 			AnyPrefix:        false,
+			Pass:             false,
+		},
+		{
+			Name:             "empty-labels-case-any",
+			Labels:           []*github.Label{},
+			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
+			AnyPrefix:        true,
 			Pass:             false,
 		},
 		{
@@ -79,11 +100,18 @@ var (
 			Pass:             false,
 		},
 		{
-			Name:             "partial-missing-labels",
+			Name:             "partial-missing-labels-and",
 			Labels:           []*github.Label{labelTestOne, labelReleaseOne, labelReleaseTwo},
 			RequiredPrefixes: []string{prefixRelease, prefixPriority},
 			AnyPrefix:        false,
 			Pass:             false,
+		},
+		{
+			Name:             "partial-missing-labels-any",
+			Labels:           []*github.Label{labelTestOne, labelReleaseOne, labelReleaseTwo},
+			RequiredPrefixes: []string{prefixRelease, prefixPriority},
+			AnyPrefix:        true,
+			Pass:             true,
 		},
 		{
 			Name:             "suffix-test-1",
