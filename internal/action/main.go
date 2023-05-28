@@ -10,8 +10,9 @@ import (
 )
 
 type Options struct {
-	TitleMinimum  int
-	LabelPrefixes string
+	TitleMinimum     int
+	LabelPrefixes    string
+	LabelPrefixesAny bool
 }
 
 func RunChecks(logger *logrus.Logger, pull *github.PullRequest, options *Options) error {
@@ -33,7 +34,7 @@ func RunChecks(logger *logrus.Logger, pull *github.PullRequest, options *Options
 
 	prefixes := strings.Split(options.LabelPrefixes, ",")
 
-	if err := CheckLabels(logger, pull, prefixes); err != nil {
+	if err := CheckLabels(logger, pull, prefixes, options.LabelPrefixesAny); err != nil {
 		return fmt.Errorf("check on labels failed: %w", err)
 	}
 
