@@ -29,10 +29,11 @@ on:
       - reopened
       - synchronize
       - edited
-      # Catch when added labels are forcefully removed
+      - labeled
       - unlabeled
     branches:
       - main
+      - master
 
 permissions:
   contents: read
@@ -59,8 +60,9 @@ jobs:
 
 > **Note**:
 > Do **not** use the `main` branch (or any other branch) as a reference for the
-> GitHub Action, as the binaries for the GitHub Action builds and releases on
-> tagging, and the Action downloads those on running.
+> GitHub Action as the building of binaries for the GitHub Action will be on
+> releases through tagging. This Action downloads those on running, and so
+> nothing but tagged releases will fully run.
 
 ## Inputs
 
