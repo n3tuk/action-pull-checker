@@ -8,7 +8,11 @@ inputs:
   title-minimum:
     description: The minimum number of characters that a title should contain
     required: false
-    default: 25
+    default: '25'
+  label-prefixes:
+    description: A comma-separated list of label prefixes to check for on a pull request
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -36,7 +40,8 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
       run: |-
         ${{ github.action_path }}/bin/pull-requester run \
-          --title-minimum ${{ inputs.title-minimum }}
+          --title-minimum ${{ inputs.title-minimum }} \
+          --label-prefixes ${{ inputs.label-prefixes }}
 
 branding:
   icon: user-check

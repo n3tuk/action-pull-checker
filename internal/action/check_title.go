@@ -8,13 +8,13 @@ import (
 
 // Define an Interface which maps to the GetTitle function on the type so that
 // we can simplify the requirements of the value passed and improve testability
-type PullRequest interface {
+type PullRequestTitle interface {
 	GetTitle() string
 }
 
-// Check the Title of the pull request to validate that it is at least the
+// Check the title of the pull request to validate that it is at least the
 // minimum length required, and return an error if it is not
-func CheckTitle(log *logrus.Logger, pull PullRequest, minimum int) error {
+func CheckTitle(log *logrus.Logger, pull PullRequestTitle, minimum int) error {
 	title := pull.GetTitle()
 
 	log.
