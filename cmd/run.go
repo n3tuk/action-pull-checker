@@ -16,7 +16,8 @@ var (
 
 	dryRun bool
 
-	titleMinimum int = 25
+	titleMinimum  int = 25
+	labelPrefixes string
 
 	// runCmd represents the run command
 	runCmd = &cobra.Command{
@@ -32,12 +33,14 @@ func init() {
 	runCmd.Flags().StringVarP(&repository, "repository", "r", "action-pull-requester", "The name of the repository to check")
 	runCmd.Flags().IntVar(&number, "number", 0, "The number of the pull request to check")
 	runCmd.Flags().IntVar(&titleMinimum, "title-minimum", titleMinimum, "The minimum number of characters a title should contain")
+	runCmd.Flags().StringVar(&labelPrefixes, "label-prefixes", "", "A comma-separated list of label prefixes to check for on a pull request")
 	rootCmd.AddCommand(runCmd)
 }
 
 func RunChecks(cmd *cobra.Command, args []string) error {
 	options := &action.Options{
-		TitleMinimum: titleMinimum,
+		TitleMinimum:  titleMinimum,
+		LabelPrefixes: labelPrefixes,
 	}
 
 	pr, err := github.NewPullRequest(logger, owner, repository, number)

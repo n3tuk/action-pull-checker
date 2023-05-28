@@ -13,7 +13,7 @@ import (
 // input, the test for the length, and if the CheckTitle() function should pass
 // or fail the test
 type CheckTitleTest struct {
-	Input   string
+	Title   string
 	Minimum int
 	Pass    bool
 }
@@ -21,17 +21,17 @@ type CheckTitleTest struct {
 // Define the expected tests for TestCheckTitle()
 var CheckTitleTests = []*CheckTitleTest{
 	{
-		Input:   "This is a Pull Request Title",
+		Title:   "This is a Pull Request Title",
 		Minimum: 20,
 		Pass:    true,
 	},
 	{
-		Input:   "This is a Pull Request Title",
+		Title:   "This is a Pull Request Title",
 		Minimum: 50,
 		Pass:    false,
 	},
 	{
-		Input:   "Invalid",
+		Title:   "Invalid",
 		Minimum: 20,
 		Pass:    false,
 	},
@@ -40,7 +40,7 @@ var CheckTitleTests = []*CheckTitleTest{
 // Provide the GitTitle() function against the CheckTitleTest type so that it
 // matches the PullRequest interface required for CheckTitle()
 func (c *CheckTitleTest) GetTitle() string {
-	return c.Input
+	return c.Title
 }
 
 // Test the CheckTitle() function for testing the length of the titles on pull
