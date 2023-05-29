@@ -13,6 +13,7 @@ type (
 	PullRequest interface {
 		PullRequestTitle
 		PullRequestLabels
+		PullRequestBody
 
 		GetOwner() string
 		GetRepository() string
@@ -41,8 +42,8 @@ func RunChecks(logger *logrus.Logger, pull PullRequest, options *Options) error 
 		return fmt.Errorf("check on title failed: %w", err)
 	}
 
-	if err := CheckDescription(logger, pull); err != nil {
-		return fmt.Errorf("check on description failed: %w", err)
+	if err := CheckBody(logger, pull, options.BodySplit, options.BodyMinimum); err != nil {
+		return fmt.Errorf("check on body failed: %w", err)
 	}
 
 	prefixes := strings.Split(options.LabelPrefixes, ",")
@@ -66,16 +67,6 @@ func RunAutomations(logger *logrus.Logger, pull *github.PullRequest) error {
 	if err := CheckAssignee(logger, pull); err != nil {
 		return fmt.Errorf("check on assignee failed: %w", err)
 	}
-
-	return nil
-}
-
-func CheckDescription(log *logrus.Logger, pullRequest *github.PullRequest) error {
-	log.
-		Debug("checking the description")
-
-	log.
-		Error("description check not yet supported")
 
 	return nil
 }

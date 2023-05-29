@@ -6,9 +6,17 @@ description: |-
 
 inputs:
   title-minimum:
-    description: The minimum number of characters that a title should contain
+    description: The minimum number of characters that the title should contain
     required: false
     default: '25'
+  body-split:
+    description: The set of characters which split the body and the pull request template
+    required: false
+    default: '---'
+  body-minimum:
+    description: The minimum number of characters that the body should contain
+    required: false
+    default: '100'
   label-prefixes:
     description: A comma-separated list of label prefixes to check for on a pull request
     required: false
@@ -47,6 +55,8 @@ runs:
           --repository=${{ github.repository }} \
           --number=${{ github.event.pull_request.number }} \
           --title-minimum=${{ inputs.title-minimum }} \
+          --body-split=${{ inputs.body-split }} \
+          --body-minimum=${{ inputs.body-minimum }} \
           --label-prefixes=${{ inputs.label-prefixes }} \
           --label-prefix-mode=${{ inputs.label-prefix-mode }}
 
