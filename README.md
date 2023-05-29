@@ -66,10 +66,10 @@ jobs:
 
 ## Inputs
 
-| Name                | Description                                                              | Required | Type     | Default |
-| :------------------ | :----------------------------------------------------------------------- | :------: | :------- | :------ |
-| `title-minimum`     | The minimum number of characters that the title should contain           | `false`  | `int`    | `25`    |
-| `body-split`        | The set of characters which split the body and the pull request template | `false`  | `string` | `---`   |
-| `body-minimum`      | The minimum number of characters that the body should contain            | `false`  | `int`    | `100`   |
-| `label-prefixes`    | A comma-separated list of label prefixes to check for on a pull request  | `false`  | `string` | `''`    |
-| `label-prefix-mode` | Set if `any` one prefix, or `all` label prefixes, must match to pass     | `false`  | `string` | `all`   |
+| Name                | Description                                                                | Required | Type     | Default |
+| :------------------ | :------------------------------------------------------------------------- | :------: | :------- | :------ |
+| `title-minimum`     | The lower bound for the number of characters that the title should contain | `false`  | `int`    | `25`    |
+| `body-split`        | The set of characters which split the body and the pull request template   | `false`  | `string` | `---`   |
+| `body-minimum`      | The lower bound for the number of characters that the body should contain  | `false`  | `int`    | `100`   |
+| `label-prefixes`    | A comma-separated list of label prefixes to check for on a pull request    | `false`  | `string` | `''`    |
+| `label-prefix-mode` | Set if `any` one prefix, or `all` label prefixes, must match to pass       | `false`  | `string` | `all`   |
