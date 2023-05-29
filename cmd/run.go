@@ -16,9 +16,9 @@ var (
 
 	dryRun bool
 
-	titleMinimum     int = 25
-	labelPrefixes    string
-	labelPrefixesAny bool
+	titleMinimum    int = 25
+	labelPrefixes   string
+	labelPrefixMode string = "all"
 
 	// runCmd represents the run command
 	runCmd = &cobra.Command{
@@ -34,15 +34,15 @@ func init() {
 	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Only show what actions would be taken")
 	runCmd.Flags().IntVar(&titleMinimum, "title-minimum", titleMinimum, "The minimum number of characters a title should contain")
 	runCmd.Flags().StringVar(&labelPrefixes, "label-prefixes", "", "A comma-separated list of label prefixes to check for on a pull request")
-	runCmd.Flags().BoolVar(&labelPrefixesAny, "label-prefixes-any", false, "Set that any label prefix can match to pass, rather than all")
+	runCmd.Flags().StringVar(&labelPrefixMode, "label-prefix-mode", labelPrefixMode, "Set if any one prefix, or all label prefixes, must match to pass")
 	rootCmd.AddCommand(runCmd)
 }
 
 func RunChecks(cmd *cobra.Command, args []string) error {
 	options := &action.Options{
-		TitleMinimum:     titleMinimum,
-		LabelPrefixes:    labelPrefixes,
-		LabelPrefixesAny: labelPrefixesAny,
+		TitleMinimum:    titleMinimum,
+		LabelPrefixes:   labelPrefixes,
+		LabelPrefixMode: labelPrefixMode,
 	}
 
 	repo := strings.Split(repository, "/")

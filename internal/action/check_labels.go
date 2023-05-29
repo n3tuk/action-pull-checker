@@ -16,8 +16,15 @@ type PullRequestLabels interface {
 
 // Check the labels of the pull request to validate that the prefixes requested
 // have been attached, and return an error if it is not
-func CheckLabels(log *logrus.Logger, pull PullRequestLabels, prefixes []string, any bool) error {
+func CheckLabels(log *logrus.Logger, pull PullRequestLabels, prefixes []string, mode string) error {
 	var attached, missing []string
+
+	switch mode {
+	case "any":
+	case "all":
+	default:
+		return fmt.Errorf("the mode (%s) is not one of any or all", mode)
+	}
 
 	labels := pull.GetLabels()
 	for _, label := range labels {
@@ -28,6 +35,7 @@ func CheckLabels(log *logrus.Logger, pull PullRequestLabels, prefixes []string, 
 		WithFields(logrus.Fields{
 			"attached": strings.Join(attached, ","),
 			"prefixes": strings.Join(prefixes, ","),
+			"mode":     mode,
 		}).
 		Debug("checking the labels")
 
@@ -42,7 +50,7 @@ func CheckLabels(log *logrus.Logger, pull PullRequestLabels, prefixes []string, 
 
 		for _, label := range attached {
 			if strings.HasPrefix(label, prefix) {
-				if any {
+				if mode == "any" {
 					return nil // quick exit
 				}
 

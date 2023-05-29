@@ -17,7 +17,7 @@ type CheckLabelsTest struct {
 	Name             string
 	Labels           []*github.Label
 	RequiredPrefixes []string
-	AnyPrefix        bool
+	Mode             string
 	Pass             bool
 }
 
@@ -47,85 +47,92 @@ var (
 			Name:             "all-types-match-and",
 			Labels:           []*github.Label{labelTestOne, labelTestTwo, labelReleaseOne, labelReleaseTwo, labelPriorityOne, labelPriorityTwo},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "all-types-match-all",
 			Labels:           []*github.Label{labelTestOne, labelTestTwo, labelReleaseOne, labelReleaseTwo, labelPriorityOne, labelPriorityTwo},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
-			AnyPrefix:        true,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "simple-types-match-and",
 			Labels:           []*github.Label{labelTestOne},
 			RequiredPrefixes: []string{prefixTest},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "simple-types-match-any",
 			Labels:           []*github.Label{labelTestOne},
 			RequiredPrefixes: []string{prefixTest},
-			AnyPrefix:        true,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "empty-prefixes-case",
 			Labels:           []*github.Label{labelTestOne, labelTestTwo, labelReleaseOne, labelReleaseTwo, labelPriorityOne, labelPriorityTwo},
 			RequiredPrefixes: []string{},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "empty-labels-case-and",
 			Labels:           []*github.Label{},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             false,
 		},
 		{
 			Name:             "empty-labels-case-any",
 			Labels:           []*github.Label{},
 			RequiredPrefixes: []string{prefixTest, prefixRelease, prefixPriority},
-			AnyPrefix:        true,
+			Mode:             "any",
 			Pass:             false,
 		},
 		{
 			Name:             "missing-labels",
 			Labels:           []*github.Label{labelTestOne, labelTestTwo},
 			RequiredPrefixes: []string{prefixPriority},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             false,
 		},
 		{
 			Name:             "partial-missing-labels-and",
 			Labels:           []*github.Label{labelTestOne, labelReleaseOne, labelReleaseTwo},
 			RequiredPrefixes: []string{prefixRelease, prefixPriority},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             false,
 		},
 		{
 			Name:             "partial-missing-labels-any",
 			Labels:           []*github.Label{labelTestOne, labelReleaseOne, labelReleaseTwo},
 			RequiredPrefixes: []string{prefixRelease, prefixPriority},
-			AnyPrefix:        true,
+			Mode:             "any",
 			Pass:             true,
 		},
 		{
 			Name:             "suffix-test-1",
 			Labels:           []*github.Label{labelTestOne},
 			RequiredPrefixes: []string{prefixTest},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             true,
 		},
 		{
 			Name:             "suffix-test-2",
 			Labels:           []*github.Label{labelTestTwo},
 			RequiredPrefixes: []string{prefixTest},
-			AnyPrefix:        false,
+			Mode:             "all",
 			Pass:             true,
+		},
+		{
+			Name:             "invalid-mode",
+			Labels:           []*github.Label{labelTestTwo},
+			RequiredPrefixes: []string{prefixTest},
+			Mode:             "everything",
+			Pass:             false,
 		},
 	}
 )
@@ -143,7 +150,7 @@ func TestCheckLabels(t *testing.T) {
 
 	for _, check := range CheckLabelsTests {
 		t.Run(check.Name, func(t *testing.T) {
-			err := action.CheckLabels(logger, check, check.RequiredPrefixes, check.AnyPrefix)
+			err := action.CheckLabels(logger, check, check.RequiredPrefixes, check.Mode)
 			if check.Pass {
 				assert.NoError(t, err, "The CheckLabels returned an error when nil was expected")
 			} else {

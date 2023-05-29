@@ -13,8 +13,8 @@ inputs:
     description: A comma-separated list of label prefixes to check for on a pull request
     required: false
     default: ''
-  label-prefixes-any:
-    description: Set that any label prefix can match to pass, rather than all
+  label-prefix-mode:
+    description: Set if any one prefix, or all label prefixes, must match to pass
     required: false
     default: 'false'
 
@@ -48,7 +48,7 @@ runs:
           --number=${{ github.event.pull_request.number }} \
           --title-minimum=${{ inputs.title-minimum }} \
           --label-prefixes=${{ inputs.label-prefixes }} \
-          --label-prefixes-any=${{ inputs.label-prefixes-any }}
+          --label-prefix-mode=${{ inputs.label-prefix-mode }}
 
 branding:
   icon: user-check
