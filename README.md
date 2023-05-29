@@ -73,3 +73,4 @@ jobs:
 | `body-minimum`      | The lower bound for the number of characters that the body should contain  | `false`  | `int`    | `100`   |
 | `label-prefixes`    | A comma-separated list of label prefixes to check for on a pull request    | `false`  | `string` | `''`    |
 | `label-prefix-mode` | Set if `any` one prefix, or `all` label prefixes, must match to pass       | `false`  | `string` | `all`   |
+| `auto-assign`       | Set whether to enable auto-assignment of a pull request to the creator     | `false`  | `bool`   | `true`  |
