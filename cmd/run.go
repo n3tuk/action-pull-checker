@@ -19,7 +19,7 @@ var (
 	titleMinimum    int    = 25
 	bodySplit       string = "## Checklist"
 	bodyMinimum     int    = 100
-	labelPrefixes   string
+	labelPrefixes   string = strings.Join([]string{"release/", "type/", "update/"}, ",")
 	labelPrefixMode string = "all"
 
 	// runCmd represents the run command

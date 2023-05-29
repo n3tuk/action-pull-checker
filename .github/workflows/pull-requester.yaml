@@ -37,5 +37,3 @@ jobs:
         # Target main here as it's easier than trying to deal with future
         # versions that this pull request will become
         uses: n3tuk/action-pull-requester@v1
-        with:
-          label-prefixes: release/,type/,update/
