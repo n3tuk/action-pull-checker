@@ -24,7 +24,11 @@ inputs:
   label-prefix-mode:
     description: Set if any one prefix, or all label prefixes, must match to pass
     required: false
-    default: 'false'
+    default: 'all'
+  auto-assign:
+    description: Set whether to enable auto-assignment of a pull request to the creator
+    required: false
+    default: 'true'
 
 runs:
   using: composite
@@ -58,7 +62,8 @@ runs:
           --body-split=${{ inputs.body-split }} \
           --body-minimum=${{ inputs.body-minimum }} \
           --label-prefixes=${{ inputs.label-prefixes }} \
-          --label-prefix-mode=${{ inputs.label-prefix-mode }}
+          --label-prefix-mode=${{ inputs.label-prefix-mode }} \
+          --auto-assign=${{ inputs.auto-assign }} \
 
 branding:
   icon: user-check

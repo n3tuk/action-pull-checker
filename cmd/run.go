@@ -21,6 +21,7 @@ var (
 	bodyMinimum     int    = 100
 	labelPrefixes   string = strings.Join([]string{"release/", "type/", "update/"}, ",")
 	labelPrefixMode string = "all"
+	autoAssign      bool   = true
 
 	// runCmd represents the run command
 	runCmd = &cobra.Command{
@@ -39,6 +40,7 @@ func init() {
 	runCmd.Flags().IntVar(&bodyMinimum, "body-minimum", bodyMinimum, "The lower bound for the number of characters the body should contain")
 	runCmd.Flags().StringVar(&labelPrefixes, "label-prefixes", "", "A comma-separated list of label prefixes to check for on a pull request")
 	runCmd.Flags().StringVar(&labelPrefixMode, "label-prefix-mode", labelPrefixMode, "Set if any one prefix, or all label prefixes, must match to pass")
+	runCmd.Flags().BoolVar(&autoAssign, "auto-assign", autoAssign, "Set whether to enable auto-assignment of a pull request to the creator")
 	rootCmd.AddCommand(runCmd)
 }
 
@@ -49,6 +51,7 @@ func RunChecks(cmd *cobra.Command, args []string) error {
 		BodyMinimum:     bodyMinimum,
 		LabelPrefixes:   labelPrefixes,
 		LabelPrefixMode: labelPrefixMode,
+		AutoAssign:      autoAssign,
 	}
 
 	repo := strings.Split(repository, "/")

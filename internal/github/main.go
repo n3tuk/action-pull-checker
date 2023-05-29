@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/google/go-github/v52/github"
 	"github.com/gregjones/httpcache"
@@ -20,6 +21,8 @@ type PullRequest struct {
 	client      *github.Client
 	pullRequest *github.PullRequest
 }
+
+const TIMEOUT = 15 * time.Second
 
 func NewPullRequest(logger *logrus.Logger, owner, repository string, number int) (*PullRequest, error) {
 	token := os.Getenv("GITHUB_TOKEN")
@@ -99,4 +102,40 @@ func (p *PullRequest) GetLabels() []*github.Label {
 	}
 
 	return p.pullRequest.Labels
+}
+
+func (p *PullRequest) GetUser() *github.User {
+	if p == nil || p.pullRequest == nil {
+		return nil
+	}
+
+	return p.pullRequest.User
+}
+
+func (p *PullRequest) GetAssignees() []*github.User {
+	if p == nil || p.pullRequest == nil {
+		return nil
+	}
+
+	return p.pullRequest.Assignees
+}
+
+func (p *PullRequest) SetAssignee(users []string) error {
+	if p == nil || p.pullRequest == nil {
+		return fmt.Errorf("unable to set assignee on the pull request: pull request unset")
+	}
+
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		TIMEOUT,
+	)
+	defer cancel()
+
+	//nolint:dogsled // only the error returned is required here
+	_, _, err := p.client.Issues.AddAssignees(ctx, p.Owner, p.Repository, p.Number, users)
+	if err != nil {
+		return fmt.Errorf("unable to set assignee on the pull request: %w", err)
+	}
+
+	return nil
 }

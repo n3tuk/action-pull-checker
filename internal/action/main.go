@@ -14,6 +14,7 @@ type (
 		PullRequestTitle
 		PullRequestLabels
 		PullRequestBody
+		PullRequestAssignee
 
 		GetOwner() string
 		GetRepository() string
@@ -26,6 +27,7 @@ type (
 		BodyMinimum     int
 		LabelPrefixes   string
 		LabelPrefixMode string
+		AutoAssign      bool
 	}
 )
 
@@ -64,19 +66,9 @@ func RunAutomations(logger *logrus.Logger, pull *github.PullRequest) error {
 		}).
 		Debug("running automations")
 
-	if err := CheckAssignee(logger, pull); err != nil {
-		return fmt.Errorf("check on assignee failed: %w", err)
+	if err := CheckAssignees(logger, pull); err != nil {
+		return fmt.Errorf("check on assignees failed: %w", err)
 	}
-
-	return nil
-}
-
-func CheckAssignee(log *logrus.Logger, pullRequest *github.PullRequest) error {
-	log.
-		Debug("checking the assignee")
-
-	log.
-		Error("assignee automation not yet supported")
 
 	return nil
 }
