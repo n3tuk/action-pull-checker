@@ -85,6 +85,14 @@ func (p *PullRequest) GetTitle() string {
 	return *p.pullRequest.Title
 }
 
+func (p *PullRequest) GetBody() string {
+	if p == nil || p.pullRequest == nil {
+		return ""
+	}
+
+	return *p.pullRequest.Body
+}
+
 func (p *PullRequest) GetLabels() []*github.Label {
 	if p == nil || p.pullRequest == nil {
 		return nil

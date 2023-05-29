@@ -16,7 +16,9 @@ var (
 
 	dryRun bool
 
-	titleMinimum    int = 25
+	titleMinimum    int    = 25
+	bodySplit       string = "## Checklist"
+	bodyMinimum     int    = 100
 	labelPrefixes   string
 	labelPrefixMode string = "all"
 
@@ -32,7 +34,9 @@ func init() {
 	runCmd.Flags().StringVarP(&repository, "repository", "r", "n3tuk/action-pull-requester", "The name of the repository to check")
 	runCmd.Flags().IntVar(&number, "number", 0, "The number of the pull request to check")
 	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Only show what actions would be taken")
-	runCmd.Flags().IntVar(&titleMinimum, "title-minimum", titleMinimum, "The minimum number of characters a title should contain")
+	runCmd.Flags().IntVar(&titleMinimum, "title-minimum", titleMinimum, "The minimum number of characters the title should contain")
+	runCmd.Flags().StringVar(&bodySplit, "body-split", bodySplit, "The set of characters which split the body and the pull request template")
+	runCmd.Flags().IntVar(&bodyMinimum, "body-minimum", bodyMinimum, "The minimum number of characters the body should contain")
 	runCmd.Flags().StringVar(&labelPrefixes, "label-prefixes", "", "A comma-separated list of label prefixes to check for on a pull request")
 	runCmd.Flags().StringVar(&labelPrefixMode, "label-prefix-mode", labelPrefixMode, "Set if any one prefix, or all label prefixes, must match to pass")
 	rootCmd.AddCommand(runCmd)
@@ -41,6 +45,8 @@ func init() {
 func RunChecks(cmd *cobra.Command, args []string) error {
 	options := &action.Options{
 		TitleMinimum:    titleMinimum,
+		BodySplit:       bodySplit,
+		BodyMinimum:     bodyMinimum,
 		LabelPrefixes:   labelPrefixes,
 		LabelPrefixMode: labelPrefixMode,
 	}
