@@ -10,8 +10,8 @@ import (
 )
 
 // Define the structure of the table for TestCheckTitle, with the expected
-// input, the test for the length, and if the CheckTitle() function should pass
-// or fail the test
+// input, tests, and if the CheckTitle() function should pass or fail the test
+// (i.e. the title is over the minimum length)
 type CheckTitleTest struct {
 	Title   string
 	Minimum int
@@ -38,7 +38,7 @@ var CheckTitleTests = []*CheckTitleTest{
 }
 
 // Provide the GitTitle() function against the CheckTitleTest type so that it
-// matches the PullRequest interface required for CheckTitle()
+// matches the PullRequestTitle interface required for CheckTitle()
 func (c *CheckTitleTest) GetTitle() string {
 	return c.Title
 }
@@ -52,9 +52,9 @@ func TestCheckTitle(t *testing.T) {
 		for _, check := range CheckTitleTests {
 			err := action.CheckTitle(logger, check, check.Minimum)
 			if check.Pass {
-				assert.NoError(t, err, "The CheckTitle returned an error when nil was expected")
+				assert.NoError(t, err, "CheckTitle() returned an error when nil was expected")
 			} else {
-				assert.Error(t, err, "The CheckTitle did not return an error when expected")
+				assert.Error(t, err, "CheckTitle() did not return an error when one was expected")
 			}
 		}
 	})
