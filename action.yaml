@@ -6,7 +6,7 @@ description: |-
 
 inputs:
   title-minimum:
-    description: The minimum number of characters that the title should contain
+    description: The lower bound for the number of characters that the title should contain
     required: false
     default: '25'
   body-split:
@@ -14,7 +14,7 @@ inputs:
     required: false
     default: '---'
   body-minimum:
-    description: The minimum number of characters that the body should contain
+    description: The lower bound for the number of characters that the body should contain
     required: false
     default: '100'
   label-prefixes:
