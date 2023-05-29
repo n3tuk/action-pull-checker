@@ -24,6 +24,7 @@ type CheckAssigneeTest struct {
 }
 
 var (
+	// Pre-create the strings for the logins as they must be passed as pointers
 	userLogin     = "user-01"
 	assigneLogin1 = "assignee-01"
 	assigneLogin2 = "assignee-02"

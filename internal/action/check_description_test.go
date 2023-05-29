@@ -11,8 +11,8 @@ import (
 )
 
 // Define the structure of the table for TestCheckBody, with the expected
-// input, the test for the length, and if the CheckBody() function should pass
-// or fail the test
+// input, tests, and if the CheckBody() function should pass or fail the test
+// (i.e. the body if over the minimum length after being split)
 type CheckBodyTest struct {
 	Name    string
 	Body    string
@@ -109,13 +109,13 @@ var CheckBodyTests = []*CheckBodyTest{
 }
 
 // Provide the GitBody() function against the CheckBodyTest type so that it
-// matches the PullRequest interface required for CheckBody()
+// matches the PullRequestBody interface required for CheckBody()
 func (c *CheckBodyTest) GetBody() string {
 	return c.Body
 }
 
-// Test the CheckBody() function for testing the length of the bodys on pull
-// requests in GitHub
+// Test the CheckBody() function for testing the length of the body, after
+// split, on pull requests in GitHub
 func TestCheckBody(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 
@@ -123,9 +123,9 @@ func TestCheckBody(t *testing.T) {
 		t.Run(check.Name, func(t *testing.T) {
 			err := action.CheckBody(logger, check, check.Split, check.Minimum)
 			if check.Pass {
-				assert.NoError(t, err, "The CheckBody returned an error when nil was expected")
+				assert.NoError(t, err, "CheckBody() returned an error when nil was expected")
 			} else {
-				assert.Error(t, err, "The CheckBody did not return an error when expected")
+				assert.Error(t, err, "CheckBody() did not return an error when one was expected")
 			}
 		})
 	}

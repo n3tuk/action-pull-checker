@@ -11,8 +11,8 @@ import (
 )
 
 // Define the structure of the table for TestCheckLabels, with the expected
-// input, the test for the length, and if the CheckLabels() function should pass
-// or fail the test
+// input, tests, and if the CheckLabels() function should pass or fail the test
+// (i.e. the required labels are added to the pull request)
 type CheckLabelsTest struct {
 	Name             string
 	Labels           []*github.Label
@@ -22,7 +22,7 @@ type CheckLabelsTest struct {
 }
 
 var (
-	// Pre-create the strings for the names as they must be passed and pointers
+	// Pre-create the strings for the names as they must be passed as pointers
 	nameTestOne     = "test/one"
 	nameTestTwo     = "test/two"
 	nameReleaseOne  = "release/one"
@@ -138,13 +138,13 @@ var (
 )
 
 // Provide the GitLabels() function against the CheckLabelsTest type so that it
-// matches the PullRequest interface required for CheckLabels()
+// matches the PullRequestLabels interface required for CheckLabels()
 func (c *CheckLabelsTest) GetLabels() []*github.Label {
 	return c.Labels
 }
 
-// Test the CheckLabels() function for testing the length of the titles on pull
-// requests in GitHub
+// Test the CheckLabels() function for testing the presence of required labels
+// on pull requests in GitHub
 func TestCheckLabels(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 
@@ -152,9 +152,9 @@ func TestCheckLabels(t *testing.T) {
 		t.Run(check.Name, func(t *testing.T) {
 			err := action.CheckLabels(logger, check, check.RequiredPrefixes, check.Mode)
 			if check.Pass {
-				assert.NoError(t, err, "The CheckLabels returned an error when nil was expected")
+				assert.NoError(t, err, "CheckLabels() returned an error when nil was expected")
 			} else {
-				assert.Error(t, err, "The CheckLabels did not return an error when expected")
+				assert.Error(t, err, "CheckLabels() did not return an error when one was expected")
 			}
 		})
 	}
