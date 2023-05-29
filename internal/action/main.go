@@ -9,18 +9,31 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Options struct {
-	TitleMinimum    int
-	LabelPrefixes   string
-	LabelPrefixMode string
-}
+type (
+	PullRequest interface {
+		PullRequestTitle
+		PullRequestLabels
 
-func RunChecks(logger *logrus.Logger, pull *github.PullRequest, options *Options) error {
+		GetOwner() string
+		GetRepository() string
+		GetNumber() int
+	}
+
+	Options struct {
+		TitleMinimum    int
+		BodySplit       string
+		BodyMinimum     int
+		LabelPrefixes   string
+		LabelPrefixMode string
+	}
+)
+
+func RunChecks(logger *logrus.Logger, pull PullRequest, options *Options) error {
 	logger.
 		WithFields(logrus.Fields{
-			"owner":      pull.Owner,
-			"repository": pull.Repository,
-			"number":     pull.Number,
+			"owner":      pull.GetOwner(),
+			"repository": pull.GetRepository(),
+			"number":     pull.GetNumber(),
 		}).
 		Debug("running checks")
 

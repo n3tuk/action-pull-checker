@@ -53,6 +53,30 @@ func NewPullRequest(logger *logrus.Logger, owner, repository string, number int)
 	return pullRequest, nil
 }
 
+func (p *PullRequest) GetOwner() string {
+	if p == nil {
+		return ""
+	}
+
+	return p.Owner
+}
+
+func (p *PullRequest) GetRepository() string {
+	if p == nil {
+		return ""
+	}
+
+	return p.Repository
+}
+
+func (p *PullRequest) GetNumber() int {
+	if p == nil {
+		return 0
+	}
+
+	return p.Number
+}
+
 func (p *PullRequest) GetTitle() string {
 	if p == nil || p.pullRequest == nil {
 		return ""
