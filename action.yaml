@@ -47,7 +47,7 @@ runs:
           --repository=${{ github.repository }} \
           --number=${{ github.event.pull_request.number }} \
           --title-minimum=${{ inputs.title-minimum }} \
-          --label-prefixes=${{ inputs.label-prefixes }}
+          --label-prefixes=${{ inputs.label-prefixes }} \
           --label-prefixes-any=${{ inputs.label-prefixes-any }}
 
 branding:
