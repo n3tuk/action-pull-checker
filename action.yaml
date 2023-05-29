@@ -44,6 +44,8 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
       run: |-
         ${{ github.action_path }}/bin/pull-requester run \
+          --repository=${{ github.repository }} \
+          --number=${{ github.event.pull_request.number }} \
           --title-minimum=${{ inputs.title-minimum }} \
           --label-prefixes=${{ inputs.label-prefixes }}
           --label-prefixes-any=${{ inputs.label-prefixes-any }}

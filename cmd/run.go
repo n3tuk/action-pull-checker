@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/n3tuk/action-pull-requester/internal/action"
 	"github.com/n3tuk/action-pull-requester/internal/github"
@@ -10,7 +11,6 @@ import (
 )
 
 var (
-	owner      string
 	repository string
 	number     int
 
@@ -29,10 +29,9 @@ var (
 )
 
 func init() {
-	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Only show what actions would be taken")
-	runCmd.Flags().StringVarP(&owner, "owner", "o", "n3tuk", "The owner of the repository to check")
-	runCmd.Flags().StringVarP(&repository, "repository", "r", "action-pull-requester", "The name of the repository to check")
+	runCmd.Flags().StringVarP(&repository, "repository", "r", "n3tuk/action-pull-requester", "The name of the repository to check")
 	runCmd.Flags().IntVar(&number, "number", 0, "The number of the pull request to check")
+	runCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Only show what actions would be taken")
 	runCmd.Flags().IntVar(&titleMinimum, "title-minimum", titleMinimum, "The minimum number of characters a title should contain")
 	runCmd.Flags().StringVar(&labelPrefixes, "label-prefixes", "", "A comma-separated list of label prefixes to check for on a pull request")
 	runCmd.Flags().BoolVar(&labelPrefixesAny, "label-prefixes-any", false, "Set that any label prefix can match to pass, rather than all")
@@ -46,7 +45,9 @@ func RunChecks(cmd *cobra.Command, args []string) error {
 		LabelPrefixesAny: labelPrefixesAny,
 	}
 
-	pr, err := github.NewPullRequest(logger, owner, repository, number)
+	repo := strings.Split(repository, "/")
+
+	pr, err := github.NewPullRequest(logger, repo[0], repo[1], number)
 	if err != nil {
 		return fmt.Errorf("failed to fetch the pull request: %w", err)
 	}
