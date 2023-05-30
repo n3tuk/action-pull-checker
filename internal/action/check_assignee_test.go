@@ -69,6 +69,14 @@ var (
 			GitHubError: nil,
 			Pass:        true,
 		},
+		{
+			Name:        "unassigned-with-error",
+			User:        user,
+			Assignees:   nil,
+			UserPresent: false,
+			GitHubError: fmt.Errorf("unknown error"),
+			Pass:        false,
+		},
 	}
 )
 
