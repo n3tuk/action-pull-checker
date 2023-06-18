@@ -1,15 +1,9 @@
 ---
-# When working with Dependabot and GitHub Actions, where those actions can make
+# When working with Dependabot and GitHub Actions, where those Actions can make
 # changes to documentation or code based on updates to the repository's
 # dependencies, it is always necessary for the pull requests to go though
-# multiple stagings:
-#
-# 1. The pull request should be automatically approved, assuming that only
-#    Dependabot or GitHub Actions have made changes through it.
-# 2. All required status checks should pass.
-# 3. The pull request can then be merged.
-# 4. If the pull request has been updated by dependabot, then the flag
-#    force-ci-run must be added. The above step can be re-checked.
+# multiple stagings using the force-ci-run label. These rules take this into
+# account and allow those stages to be managed and triggered as necessary.
 
 pull_request_rules:
 
@@ -69,3 +63,20 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+
+  # If there is a conflict between this pull request and the default branch, then
+  # add a message for Dependabot to recreate the pull request. This should be
+  # recreate rather than rebase as there may be none-dependabot changes added as
+  # commits to the branch for documentation changes.
+  - name: Trigger Dependabot to recreate on merge conflict
+    conditions:
+      - and:
+          - and:
+              - author=dependabot[bot]
+              - conflict
+          - or:
+              - base=main
+              - base=master
+    actions:
+      comment:
+        message: "@dependabot recreate"
