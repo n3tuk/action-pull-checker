@@ -1,0 +1,71 @@
+---
+# When working with Dependabot and GitHub Actions, where those actions can make
+# changes to documentation or code based on updates to the repository's
+# dependencies, it is always necessary for the pull requests to go though
+# multiple stagings:
+#
+# 1. The pull request should be automatically approved, assuming that only
+#    Dependabot or GitHub Actions have made changes through it.
+# 2. All required status checks should pass.
+# 3. The pull request can then be merged.
+# 4. If the pull request has been updated by dependabot, then the flag
+#    force-ci-run must be added. The above step can be re-checked.
+
+pull_request_rules:
+
+  # If the pull request was raised by Dependabot, and only Dependabot or GitHub
+  # Actions have make changes to the branch, then automatically approve if it's
+  # not in conflict with the base branch.
+  - name: Automatic approval for Dependabot pull requests
+    conditions:
+      - and:
+          - "author=dependabot[bot]"
+      - not:
+          and:
+            - "commits[*].author!=dependabot[bot]"
+            - "commits[*].author!=github-actions[bot]"
+            - conflict
+    actions:
+      review:
+        type: APPROVE
+
+  # If a commit other than the initial commit is added to a pull request raised
+  # by Dependabot, and that commit author is GitHub Actions, and the commit
+  # title starts with the word Syncing, then add the force-ci-run label to
+  # trigger the GitHub Workflows for this commit
+  - name: Trigger force-ci-run on GitHub Actions commits
+    conditions:
+      - and:
+          - author=dependabot[bot]
+          - "#commits>0"
+          - "commits[-1].author=github-actions[bot]"
+          - "commits[-1].commit_message=~^Syncing"
+      - not:
+          and:
+            - conflict
+    actions:
+      label:
+        add:
+          - force-ci-run
+
+  # If the pull request was raised by Dependabot, it only has a linear history,
+  # it has been approved for merging into the main or master branches, and is
+  # neither in conflict with the main branch, nor the force-ci-run label is still
+  # present, then automatically merge this request.
+  - name: Automatic merge for Dependabot pull requests
+    conditions:
+      - and:
+          - and:
+              - author=dependabot[bot]
+              - linear-history
+              - "#approved-reviews-by>=1"
+          - or:
+              - base=main
+              - base=master
+          - not:
+              and:
+                - conflict
+                - label=force-ci-run
+    actions:
+      merge:
+        method: merge
