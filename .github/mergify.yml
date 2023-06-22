@@ -12,13 +12,11 @@ pull_request_rules:
   # not in conflict with the base branch.
   - name: Automatic approval for Dependabot pull requests
     conditions:
-      - and:
-          - "author=dependabot[bot]"
-      - not:
-          and:
-            - "commits[*].author!=dependabot[bot]"
-            - "commits[*].author!=github-actions[bot]"
-            - conflict
+      - "author=dependabot[bot]"
+      - "-conflict"
+      - or:
+          - "commits[*].author==dependabot[bot]"
+          - "commits[*].author==github-actions[bot]"
     actions:
       review:
         type: APPROVE
@@ -29,14 +27,11 @@ pull_request_rules:
   # trigger the GitHub Workflows for this commit
   - name: Trigger force-ci-run on GitHub Actions commits
     conditions:
-      - and:
-          - author=dependabot[bot]
-          - "#commits>1"
-          - "commits[-1].author=github-actions[bot]"
-          - "commits[-1].commit_message=~^Syncing"
-      - not:
-          and:
-            - conflict
+      - author=dependabot[bot]
+      - "#commits>1"
+      - "commits[-1].author=github-actions[bot]"
+      - "commits[-1].commit_message=~^Syncing"
+      - "-conflict"
     actions:
       label:
         add:
@@ -49,17 +44,14 @@ pull_request_rules:
   - name: Automatic merge for Dependabot pull requests
     conditions:
       - and:
-          - and:
-              - author=dependabot[bot]
-              - linear-history
-              - "#approved-reviews-by>=1"
-          - or:
-              - base=main
-              - base=master
-          - not:
-              and:
-                - conflict
-                - label=force-ci-run
+          - author=dependabot[bot]
+          - linear-history
+          - "#approved-reviews-by>=1"
+          - "-conflict"
+          - "-label=force-ci-run"
+      - or:
+          - base=main
+          - base=master
     actions:
       merge:
         method: rebase
@@ -70,13 +62,11 @@ pull_request_rules:
   # commits to the branch for documentation changes.
   - name: Trigger Dependabot to recreate on merge conflict
     conditions:
-      - and:
-          - and:
-              - author=dependabot[bot]
-              - conflict
-          - or:
-              - base=main
-              - base=master
+      - author=dependabot[bot]
+      - conflict
+      - or:
+          - base=main
+          - base=master
     actions:
       comment:
         message: "@dependabot recreate"
