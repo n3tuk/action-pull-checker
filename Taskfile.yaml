@@ -40,7 +40,7 @@ tasks:
       - go mod download
 
   healthcheck:
-    desc: Check that the GoReleaser environtment is valid
+    desc: Check that the GoReleaser environment is valid
     run: once
     internal: true
     sources:
