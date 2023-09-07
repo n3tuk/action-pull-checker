@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go v${{ matrix.version }}
         uses: actions/setup-go@v4
@@ -55,7 +55,7 @@ jobs:
       - testing
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -107,7 +107,7 @@ jobs:
       - testing
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v4
