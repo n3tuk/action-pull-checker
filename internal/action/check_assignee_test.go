@@ -122,6 +122,7 @@ func TestCheckAssignee(t *testing.T) {
 			}
 
 			found := false
+
 			for _, user := range check.GetAssignees() {
 				if *user.Login == userLogin {
 					found = true
