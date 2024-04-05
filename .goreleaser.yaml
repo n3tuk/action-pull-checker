@@ -8,12 +8,11 @@ release:
 changelog:
   skip: true
 snapshot:
-  name_template: "{{ incpatch .Version }}~g{{ .ShortCommit }}{{ if .IsGitDirty }}-d{{ .Now.Format \"02-t150405\" }}{{ end }}"
+  name_template: '{{ incpatch .Version }}~g{{ .ShortCommit }}{{ if .IsGitDirty }}-d{{ .Now.Format "02-t150405" }}{{ end }}'
 checksum:
   name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
 
 builds:
-
   - id: pull-requester
     main: main.go
     binary: pull-requester
@@ -35,7 +34,6 @@ builds:
       - linux_arm64
 
 archives:
-
   - id: default
     name_template: >-
       {{ .ProjectName }}-
@@ -43,13 +41,11 @@ archives:
       {{- tolower .Os }}-
       {{- tolower .Arch }}
     format: tar.gz
-    rlcp: true
     files:
       - LICENSE
 
 # Create images for both amd64 and arm64 to give it the widest possible support
 dockers:
-
   - id: pull-requester-amd64
     goarch: amd64
     image_templates:
@@ -78,7 +74,6 @@ dockers:
 # called, including as the main branch, both short and long commit IDs, and each of
 # Major, Major/Minor, and Major/Minor/Patch versions being tagged
 docker_manifests:
-
   - name_template: ghcr.io/n3tuk/pull-requester:latest
     use: docker
     image_templates:
