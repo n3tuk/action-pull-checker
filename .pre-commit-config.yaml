@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: no-commit-to-branch
         name: Check this commit is not to the main/master branch
@@ -24,13 +24,13 @@ repos:
         name: Check all files end in a new-line only
 
   - repo: https://github.com/python-jsonschema/check-jsonschema.git
-    rev: 0.23.0
+    rev: 0.28.1
     hooks:
       - name: Check the GitHub Workflows for correctness
         id: check-github-workflows
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.31.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         name: Lint YAML files for correctness and formatting
@@ -49,9 +49,8 @@ repos:
         name: Check shell scripts formtting with shfmt
         args: ["-i", "2", "-bn", "-ci", "-sr"]
 
-
   - repo: https://github.com/golangci/golangci-lint.git
-    rev: v1.52.2
+    rev: v1.57.2
     hooks:
       - id: golangci-lint
         name: Run linters across Go source files
@@ -66,13 +65,13 @@ repos:
       - id: go-mod-tidy
 
   - repo: https://github.com/igorshubovych/markdownlint-cli.git
-    rev: v0.34.0
+    rev: v0.39.0
     hooks:
       - id: markdownlint
         name: Check Markdown correctness and formatting
 
   - repo: https://github.com/zricethezav/gitleaks.git
-    rev: v8.16.3
+    rev: v8.18.2
     hooks:
       - id: gitleaks
         name: Check for hard-coded secrets, keys, and credentials
